@@ -11,6 +11,12 @@ export const metadata: Metadata = {
   title: "Swell Tracker",
   description: "Track and visualize swell data for surf forecasting",
   generator: "v0.dev",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    minimumScale: 1,
+    viewportFit: "cover",
+  },
 };
 
 export default function RootLayout({

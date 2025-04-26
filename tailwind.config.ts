@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
@@ -53,6 +53,10 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        sidebar: {
+          DEFAULT: "white",
+          foreground: "hsl(var(--foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -75,7 +79,16 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({
+      addVariant,
+    }: {
+      addVariant: (name: string, definition: string) => void;
+    }) {
+      addVariant("ios", "@supports (-webkit-touch-callout: none)");
+    },
+  ],
+} satisfies Config;
 
-export default config
+export default config;
