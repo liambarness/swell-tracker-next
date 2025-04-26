@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import dynamic from "next/dynamic"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Loader2, MapPin, Waves, X } from "lucide-react"
-import ForecastPanel from "./forecast-panel"
-import WaveChart from "./wave-chart"
-import WindChart from "./wind-chart"
-import SavedSpots from "./saved-spots"
-import WelcomeModal from "./welcome-modal"
-import HelpButton from "./help-button"
-import { getForecast } from "@/lib/api"
-import type { LocationCoords, ProcessedForecastData } from "@/lib/types"
-import { Toaster } from "@/components/ui/toaster"
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2, MapPin, Waves, X } from "lucide-react";
+import ForecastPanel from "./forecast-panel";
+import WaveChart from "./wave-chart";
+import WindChart from "./wind-chart";
+import SavedSpots from "./saved-spots";
+import WelcomeModal from "./welcome-modal";
+import HelpButton from "./help-button";
+import { getForecast } from "@/lib/api";
+import type { LocationCoords, ProcessedForecastData } from "@/lib/types";
+import { Toaster } from "@/components/ui/toaster";
 
 // Dynamically import the map component to avoid SSR issues
 const MapComponent = dynamic(() => import("./map-component"), {
@@ -26,103 +26,118 @@ const MapComponent = dynamic(() => import("./map-component"), {
       <span className="ml-2 text-gray-600">Loading map...</span>
     </div>
   ),
-})
+});
 
 export default function SwellTracker() {
-  const [selectedLocation, setSelectedLocation] = useState<LocationCoords | null>(null)
-  const [forecastData, setForecastData] = useState<ProcessedForecastData[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [selectedDay, setSelectedDay] = useState<string | null>(null)
-  const [uniqueDays, setUniqueDays] = useState<{ key: string; label: string }[]>([])
-  const [activeTab, setActiveTab] = useState("forecast")
-  const [isSavedSpotsOpen, setIsSavedSpotsOpen] = useState(false)
+  const [selectedLocation, setSelectedLocation] =
+    useState<LocationCoords | null>(null);
+  const [forecastData, setForecastData] = useState<ProcessedForecastData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [uniqueDays, setUniqueDays] = useState<
+    { key: string; label: string }[]
+  >([]);
+  const [activeTab, setActiveTab] = useState("forecast");
+  const [isSavedSpotsOpen, setIsSavedSpotsOpen] = useState(false);
 
   // Helper functions
   const getDayOfWeek = (date: Date) => {
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-    return days[date.getDay()]
-  }
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return days[date.getDay()];
+  };
 
   const getDateKey = (date: Date) => {
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-  }
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  };
 
   // Process forecast data to group by days
   useEffect(() => {
     if (forecastData.length > 0) {
-      const days = new Map<string, string>()
+      const days = new Map<string, string>();
 
       forecastData.forEach((item) => {
-        const date = new Date(item.timestamp)
-        const dayKey = getDateKey(date)
-        const dayLabel = `${getDayOfWeek(date)} ${date.getMonth() + 1}/${date.getDate()}`
+        const date = new Date(item.timestamp);
+        const dayKey = getDateKey(date);
+        const dayLabel = `${getDayOfWeek(date)} ${
+          date.getMonth() + 1
+        }/${date.getDate()}`;
 
         if (!days.has(dayKey)) {
-          days.set(dayKey, dayLabel)
+          days.set(dayKey, dayLabel);
         }
-      })
+      });
 
-      const uniqueDaysArray = Array.from(days.entries()).map(([key, label]) => ({ key, label }))
-      setUniqueDays(uniqueDaysArray)
+      const uniqueDaysArray = Array.from(days.entries()).map(
+        ([key, label]) => ({ key, label })
+      );
+      setUniqueDays(uniqueDaysArray);
 
       // Set first day as selected if none is selected
       if (!selectedDay && uniqueDaysArray.length > 0) {
-        setSelectedDay(uniqueDaysArray[0].key)
+        setSelectedDay(uniqueDaysArray[0].key);
       }
     }
-  }, [forecastData, selectedDay])
+  }, [forecastData, selectedDay]);
 
   // Filter data based on selected day
   const filteredData = selectedDay
     ? forecastData.filter((item) => {
-        const date = new Date(item.timestamp)
-        return getDateKey(date) === selectedDay
+        const date = new Date(item.timestamp);
+        return getDateKey(date) === selectedDay;
       })
-    : forecastData
+    : forecastData;
 
   const handleLocationSelect = (coords: LocationCoords | null) => {
-    setSelectedLocation(coords)
+    setSelectedLocation(coords);
     if (!coords) {
       // If location is deselected, also clear any forecast data
-      setForecastData([])
+      setForecastData([]);
     }
-    setError(null)
-  }
+    setError(null);
+  };
 
   const handleFetchForecast = async () => {
-    if (!selectedLocation) return
+    if (!selectedLocation) return;
 
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const data = await getForecast(selectedLocation.lat, selectedLocation.lng)
-      setForecastData(data)
-      setActiveTab("forecast")
+      const data = await getForecast(
+        selectedLocation.lat,
+        selectedLocation.lng
+      );
+      setForecastData(data);
+      setActiveTab("forecast");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch forecast data")
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch forecast data"
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleClosePanel = () => {
-    setForecastData([])
+    setForecastData([]);
     // Note: We don't clear selectedLocation here anymore
     // This allows the location to remain selected on the map
-  }
+  };
 
   // Split days into two rows
   const renderDateButtons = () => {
-    if (uniqueDays.length === 0) return null
+    if (uniqueDays.length === 0) return null;
 
     // Calculate how many days to show in each row
-    const firstRowCount = Math.min(3, uniqueDays.length)
-    const secondRowCount = Math.min(4, uniqueDays.length - firstRowCount)
+    const firstRowCount = Math.min(3, uniqueDays.length);
+    const secondRowCount = Math.min(4, uniqueDays.length - firstRowCount);
 
-    const firstRow = uniqueDays.slice(0, firstRowCount)
-    const secondRow = uniqueDays.slice(firstRowCount, firstRowCount + secondRowCount)
+    const firstRow = uniqueDays.slice(0, firstRowCount);
+    const secondRow = uniqueDays.slice(
+      firstRowCount,
+      firstRowCount + secondRowCount
+    );
 
     return (
       <div className="flex flex-col gap-1.5 mt-3">
@@ -134,7 +149,9 @@ export default function SwellTracker() {
               variant={selectedDay === day.key ? "default" : "outline"}
               size="sm"
               className={`rounded-md px-2 py-1 h-auto text-sm flex-1 ${
-                selectedDay === day.key ? "bg-blue-600" : "bg-white hover:bg-gray-100"
+                selectedDay === day.key
+                  ? "bg-blue-600"
+                  : "bg-white hover:bg-gray-100"
               }`}
               onClick={() => setSelectedDay(day.key)}
             >
@@ -152,7 +169,9 @@ export default function SwellTracker() {
                 variant={selectedDay === day.key ? "default" : "outline"}
                 size="sm"
                 className={`rounded-md px-2 py-1 h-auto text-sm flex-1 ${
-                  selectedDay === day.key ? "bg-blue-600" : "bg-white hover:bg-gray-100"
+                  selectedDay === day.key
+                    ? "bg-blue-600"
+                    : "bg-white hover:bg-gray-100"
                 }`}
                 onClick={() => setSelectedDay(day.key)}
               >
@@ -166,8 +185,8 @@ export default function SwellTracker() {
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="h-full w-full relative">
@@ -179,7 +198,10 @@ export default function SwellTracker() {
 
       {/* Map Container */}
       <div className="h-full w-full">
-        <MapComponent onLocationSelect={handleLocationSelect} selectedLocation={selectedLocation} />
+        <MapComponent
+          onLocationSelect={handleLocationSelect}
+          selectedLocation={selectedLocation}
+        />
       </div>
 
       {/* Bottom Navigation Bar */}
@@ -196,10 +218,13 @@ export default function SwellTracker() {
               <div className="text-sm">
                 {selectedLocation ? (
                   <span className="font-mono">
-                    {selectedLocation.lat.toFixed(4)}, {selectedLocation.lng.toFixed(4)}
+                    {selectedLocation.lat.toFixed(4)},{" "}
+                    {selectedLocation.lng.toFixed(4)}
                   </span>
                 ) : (
-                  <span className="text-gray-500 italic">Click map to select location</span>
+                  <span className="text-gray-500 italic">
+                    Click map to select location
+                  </span>
                 )}
               </div>
             </div>
@@ -258,7 +283,8 @@ export default function SwellTracker() {
                 <div className="text-xs text-gray-500">
                   {selectedLocation && (
                     <Badge variant="outline" className="ml-2">
-                      {selectedLocation.lat.toFixed(2)}, {selectedLocation.lng.toFixed(2)}
+                      {selectedLocation.lat.toFixed(2)},{" "}
+                      {selectedLocation.lng.toFixed(2)}
                     </Badge>
                   )}
                 </div>
@@ -278,7 +304,11 @@ export default function SwellTracker() {
             {renderDateButtons()}
           </CardHeader>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <div className="px-4">
               <TabsList className="w-full">
                 <TabsTrigger value="forecast" className="flex-1">
@@ -307,7 +337,10 @@ export default function SwellTracker() {
 
             <TabsContent value="wind-chart" className="m-0">
               <div className="p-4 h-[420px]">
-                <WindChart forecastData={filteredData} selectedLocation={selectedLocation} />
+                <WindChart
+                  forecastData={filteredData}
+                  selectedLocation={selectedLocation}
+                />
               </div>
             </TabsContent>
           </Tabs>
@@ -316,5 +349,5 @@ export default function SwellTracker() {
 
       <Toaster />
     </div>
-  )
+  );
 }
