@@ -205,7 +205,7 @@ export default function SwellTracker() {
       </div>
 
       {/* Bottom Navigation Bar */}
-      <div className="absolute bottom-4 left-4 z-[1000] flex flex-col gap-2 pb-[env(safe-area-inset-bottom)] mb-[50px] ios:mb-[70px]">
+      <div className="absolute bottom-4 left-4 z-[1000] flex flex-col gap-2 pb-[env(safe-area-inset-bottom)] ios:mb-[70px]">
         {/* Location Info Card */}
         <Card
           className={`bg-white/90 backdrop-blur-sm shadow-md w-auto transition-opacity duration-200 ${
