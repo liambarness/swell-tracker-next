@@ -9,8 +9,8 @@ The application uses data from a [marine weather api](https://open-meteo.com/en/
 ## Installation
 Prerequisites: Node.js, pnpm
 
-1. Clone the repository locally
-2. Cd into the main directory of the app
-3. Run `pnpm i` to install dependencies
+1. Clone the repository locally.
+2. Cd into the main directory of the app.
+3. Run `pnpm i` to install dependencies.
 4. Run `npm run dev` to start the development server.
 5. Navigate to [https://localhost:3000/](https://localhost:300/) to view the application!
