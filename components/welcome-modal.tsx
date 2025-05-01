@@ -36,7 +36,7 @@ export default function WelcomeModal() {
               Welcome to Swell Tracker
             </DialogTitle>
             <DialogDescription className="text-base">
-              Your personal surf forecasting tool
+              This is a free surf forecasting tool.
             </DialogDescription>
           </DialogHeader>
 
@@ -90,8 +90,7 @@ export default function WelcomeModal() {
                 </h3>
                 <p className="text-sm text-gray-500">
                   View detailed charts for wave height, period, and wind
-                  conditions. Onshore/offshore wind indicators help you find the
-                  best surf days.
+                  conditions.
                 </p>
               </div>
             </div>
