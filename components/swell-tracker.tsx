@@ -275,7 +275,7 @@ export default function SwellTracker() {
 
       {/* Forecast Panel */}
       {forecastData.length > 0 && (
-        <Card className="absolute top-4 right-4 w-full max-w-md max-h-[85vh] overflow-hidden bg-white/95 backdrop-blur-sm shadow-lg z-[1000]">
+        <Card className="absolute top-4 w-full sm:right-0 md:right-4 max-w-md max-h-[85vh] overflow-hidden bg-white/95 backdrop-blur-sm shadow-lg z-[1000]">
           <CardHeader className="p-4 pb-2">
             <div className="flex justify-between items-center">
               <CardTitle className="text-xl">Wave Forecast</CardTitle>
