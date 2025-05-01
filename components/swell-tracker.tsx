@@ -191,7 +191,9 @@ export default function SwellTracker() {
   return (
     <div className="h-full w-full relative">
       {/* Welcome Modal - Shows on first visit */}
-      <WelcomeModal />
+      <div className="z-[1005]">
+        <WelcomeModal />
+      </div>
 
       {/* Help Button */}
       <HelpButton />
